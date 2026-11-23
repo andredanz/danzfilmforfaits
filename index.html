@@ -218,7 +218,7 @@ h2 em { font-style: normal; color: var(--accent); }
 .cust-p { margin: 0; max-width: 46ch; color: var(--muted); }
 .cust-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
 .cust-btns .pr-btn { background: transparent; border: 1px solid var(--fg); color: var(--fg); padding: 14px 20px; }
-.cust-btns .pr-btn:hover { background: #472F22; border-color: #472F22; color: var(--fg); }
+.cust-btns .pr-btn:hover, .cust-btns .pr-btn:active, .cust-btns .pr-btn:focus-visible { background: #EAD8B4; border-color: #EAD8B4; color: #3a2d21; }
 @media (max-width: 560px) { .cust-btns { flex-direction: column; width: 100%; } .cust-btns .pr-btn { justify-content: center; padding: 14px 16px; font-size: 11px; } }
 .pile-nav { display: flex; align-items: center; justify-content: center; gap: 18px; }
 .arrow { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: none; display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
