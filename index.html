@@ -199,6 +199,14 @@ h2 em { font-style: normal; color: var(--accent); }
 .pr-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .pr-btn svg.wa { fill: currentColor; stroke: none; }
 
+.cust { margin: clamp(48px, 8vw, 96px) auto 0; max-width: 760px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: clamp(28px, 5vw, 44px) clamp(18px, 4vw, 40px); border: 1px solid rgba(252, 236, 207, 0.22); border-radius: 16px; background: linear-gradient(150deg, rgba(102, 84, 61, 0.35), rgba(58, 45, 33, 0.25)); }
+.cust-k { margin: 0; font: 700 11px/1 var(--body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.cust-h { margin: 0; font: 400 clamp(34px, 6vw, 56px)/0.95 var(--display); text-transform: uppercase; color: var(--fg); text-wrap: balance; }
+.cust-p { margin: 0; max-width: 46ch; color: var(--muted); }
+.cust-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
+.cust-btns .pr-btn { background: transparent; border: 1px solid var(--fg); color: var(--fg); padding: 14px 20px; }
+.cust-btns .pr-btn:hover { background: #472F22; border-color: #472F22; color: var(--fg); }
+@media (max-width: 560px) { .cust-btns { flex-direction: column; width: 100%; } .cust-btns .pr-btn { justify-content: center; padding: 14px 16px; font-size: 11px; } }
 .pile-nav { display: flex; align-items: center; justify-content: center; gap: 18px; }
 .arrow { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: none; display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
 .arrow:hover { background: #472F22; border-color: #472F22; color: var(--fg); }
@@ -333,6 +341,13 @@ footer img { height: 30px; width: auto; display: block; }
         </div>
         <p class="hint" data-i18n="glisser"></p>
       </div>
+
+      <div class="cust">
+        <p class="cust-k" data-i18n="custK"></p>
+        <h3 class="cust-h" data-i18n="custH"></h3>
+        <p class="cust-p" data-i18n="custP"></p>
+        <div class="cust-btns" id="custBtns"></div>
+      </div>
     </div>
   </section>
 
@@ -379,10 +394,11 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       h2: 'Four plans, <em>one monthly</em> rhythm',
       drag: 'Drag the cards to explore each plan. Hover or tap + to see the investment.',
       glisser: 'Drag',
+      custK: 'Custom plan', custH: 'Need something tailored to your needs?', custP: 'Tell me about your project and we’ll build a plan that fits it.', custBtn: 'Get in touch by', custWa: 'Hello André, I would like a custom plan adapted to my project. Can we talk about it?', custSubj: 'Custom plan request',
       planLabel: 'Monthly plan', reelsMo: 'Reels / month',
       invest: 'Investment', per: '/ month',
-      reels: 'Reels productions per month',
-      day1: 'day of video shooting', dayN: 'days of video shooting',
+      reels: 'Reels produced per month',
+      day1: 'shooting day', dayN: 'shooting days',
       chooseX: 'Choose {n}', by: 'by', mail: 'E-mail', subj: 'Quote request – {n}',
       wamsg: 'Hello André, I am interested in the {n} plan (€{p}/month). Can we talk about it?',
       prev: 'Previous plan', next: 'Next plan', plus: 'Investment and details',
@@ -398,10 +414,11 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       h2: 'Quatre forfaits, <em>un rythme</em> mensuel',
       drag: 'Faites glisser les cartes pour découvrir chaque forfait. Survolez ou touchez le + pour voir l\'investissement.',
       glisser: 'Glisser',
+      custK: 'Sur mesure', custH: 'Besoin d’un forfait adapté à vos besoins ?', custP: 'Parlez-moi de votre projet et nous construirons ensemble un forfait qui vous correspond.', custBtn: 'Contactez-moi par', custWa: 'Bonjour André, je voudrais un forfait sur mesure adapté à mon projet. Pouvons-nous en parler ?', custSubj: 'Demande de forfait sur mesure',
       planLabel: 'Forfait mensuel', reelsMo: 'Reels / mois',
       invest: 'Investissement', per: '/ mois',
-      reels: 'Productions de Reels par mois',
-      day1: 'journée de tournage vidéo', dayN: 'jours de tournage vidéo',
+      reels: 'Reels produits par mois',
+      day1: 'jour de tournage', dayN: 'jours de tournage',
       chooseX: 'Choisir {n}', by: 'par', mail: 'E-mail', subj: 'Demande de devis – {n}',
       wamsg: 'Bonjour André, je suis intéressé(e) par le forfait {n} ({p} €/mois). Pouvons-nous en parler ?',
       prev: 'Forfait précédent', next: 'Forfait suivant', plus: 'Investissement et détails',
@@ -415,12 +432,13 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       lede: 'Produções rápidas e dinâmicas, com um toque cinematográfico, feitas para as redes sociais.',
       choose: 'Escolher meu pacote',
       h2: 'Quatro pacotes, <em>um ritmo</em> mensal',
-      drag: 'Arraste os cards para conhecer cada pacote. Passe o mouse ou toque no + para ver o investimento.',
+      drag: 'Arraste os cartões para conhecer cada pacote. Passe o mouse ou toque no + para ver o investimento.',
       glisser: 'Arraste',
+      custK: 'Pacote personalizado', custH: 'Precisa adaptar o pacote à sua demanda?', custP: 'Me conte sobre o seu projeto e montamos um pacote sob medida.', custBtn: 'Entre em contato por', custWa: 'Olá André, gostaria de um pacote personalizado para o meu projeto. Podemos conversar?', custSubj: 'Pedido de pacote personalizado',
       planLabel: 'Pacote mensal', reelsMo: 'Reels / mês',
       invest: 'Investimento', per: '/ mês',
-      reels: 'Produções de Reels por mês',
-      day1: 'diária de gravação em vídeo', dayN: 'diárias de gravação em vídeo',
+      reels: 'Reels produzidos por mês',
+      day1: 'diária de gravação', dayN: 'diárias de gravação',
       chooseX: 'Escolher {n}', by: 'por', mail: 'E-mail', subj: 'Pedido de orçamento – {n}',
       wamsg: 'Olá André, tenho interesse no pacote {n} (€{p}/mês). Podemos conversar?',
       prev: 'Pacote anterior', next: 'Próximo pacote', plus: 'Investimento e detalhes',
@@ -518,6 +536,8 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     if (open && !was) countUp(c, plans[i]);
   }
 
+  var custBox = document.getElementById('custBtns');
+  custBox.innerHTML = '<a class="pr-btn cwa" target="_blank" rel="noopener"><span class="ct"></span>' + WA_ICON + '</a><a class="pr-btn cml"><span class="ct"></span>' + ML_ICON + '</a>';
   function applyLang() {
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
@@ -548,6 +568,11 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       mailLinks[i].setAttribute('aria-label', t('chooseX').replace('{n}', p.name) + ' ' + t('by') + ' e-mail');
       dots[i].setAttribute('aria-label', p.name);
     });
+    custBox.querySelectorAll('.ct').forEach(function (e) { e.textContent = t('custBtn'); });
+    var cw = custBox.querySelector('.cwa'), cm = custBox.querySelector('.cml');
+    cw.href = 'https://wa.me/330769692517?text=' + encodeURIComponent(t('custWa'));
+    cm.href = 'mailto:danzfilm@gmail.com?subject=' + encodeURIComponent(t('custSubj')) + '&body=' + encodeURIComponent(t('custWa'));
+    cw.setAttribute('aria-label', t('custBtn') + ' WhatsApp'); cm.setAttribute('aria-label', t('custBtn') + ' e-mail');
     document.querySelectorAll('#lang [data-lang]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'); });
   }
 
