@@ -219,14 +219,14 @@ h2 em { font-style: normal; color: var(--accent); }
 .info-btn:hover i, .info-btn[aria-expanded="true"] i { background: #3a2d21; color: #EAD8B4; }
 .info-panel { display: grid; grid-template-rows: 0fr; width: 100%; transition: grid-template-rows .55s cubic-bezier(.22, .85, .25, 1); }
 .info-btn[aria-expanded="true"] + .info-panel { grid-template-rows: 1fr; }
-.info-in { overflow: hidden; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; text-align: left; opacity: 0; transition: opacity .4s; }
-.info-btn[aria-expanded="true"] + .info-panel .info-in { opacity: 1; padding: 26px clamp(18px, 4vw, 34px); margin-top: 14px; border: 1px solid rgba(252, 236, 207, 0.22); border-radius: 16px; background: linear-gradient(150deg, rgba(102, 84, 61, 0.35), rgba(58, 45, 33, 0.25)); }
-.info-k { margin: 0 0 10px; font: 700 11px/1 var(--body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-.info-t { margin: 0; color: var(--fg); font-size: 0.98rem; line-height: 1.5; }
-.info-no { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; }
-.info-no li { display: flex; gap: 12px; align-items: baseline; font: 600 15px/1.3 var(--body); color: var(--fg); }
-.info-no li::before { content: "\00d7"; color: #EAD8B4; font-size: 1.2em; line-height: 1; }
-@media (max-width: 700px) { .info-in { grid-template-columns: 1fr; } }
+.info-in { overflow: hidden; min-height: 0; display: flex; flex-direction: column; gap: 22px; text-align: left; opacity: 0; transition: opacity .4s; }
+.info-btn[aria-expanded="true"] + .info-panel .info-in { opacity: 1; padding: 30px clamp(20px, 4vw, 40px); margin-top: 14px; border: 1px solid rgba(252, 236, 207, 0.22); border-radius: 16px; background: linear-gradient(150deg, rgba(102, 84, 61, 0.35), rgba(58, 45, 33, 0.25)); }
+.info-t { margin: 0; color: var(--fg); font-size: clamp(1.02rem, 2.2vw, 1.2rem); line-height: 1.5; max-width: 62ch; }
+.info-yes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 36px; }
+.info-yes li { display: flex; gap: 12px; align-items: baseline; font: 600 15px/1.3 var(--body); color: var(--fg); }
+.info-yes li::before { content: "+"; color: #EAD8B4; font-size: 1.25em; line-height: 1; }
+.info-nope { margin: 0; padding-top: 16px; border-top: 1px solid rgba(252, 236, 207, 0.14); color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+@media (max-width: 700px) { .info-yes { grid-template-columns: 1fr; } }
 .cust { margin: clamp(48px, 8vw, 96px) auto 0; max-width: 760px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: clamp(28px, 5vw, 44px) clamp(18px, 4vw, 40px); border: 1px solid rgba(252, 236, 207, 0.22); border-radius: 16px; background: linear-gradient(150deg, rgba(102, 84, 61, 0.35), rgba(58, 45, 33, 0.25)); }
 .cust-k { margin: 0; font: 700 11px/1 var(--body); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
 .cust-h { margin: 0; font: 400 clamp(34px, 6vw, 56px)/0.95 var(--display); text-transform: uppercase; color: var(--fg); text-wrap: balance; }
@@ -372,10 +372,9 @@ footer img { height: 30px; width: auto; display: block; }
       <div class="info">
         <button class="info-btn" id="infoBtn" type="button" aria-expanded="false" aria-controls="infoPanel"><i>i</i><span data-i18n="infoBtn"></span></button>
         <div class="info-panel" id="infoPanel"><div class="info-in">
-          <div class="info-col"><p class="info-k" data-i18n="infoFocusK"></p><p class="info-t" data-i18n="infoFocus"></p></div>
-          <div class="info-col"><p class="info-k" data-i18n="infoNoK"></p>
-            <ul class="info-no"><li data-i18n="no1"></li><li data-i18n="no2"></li><li data-i18n="no3"></li><li data-i18n="no4"></li></ul>
-          </div>
+          <p class="info-t" data-i18n="infoIntro"></p>
+          <ul class="info-yes"><li data-i18n="y1"></li><li data-i18n="y2"></li><li data-i18n="y3"></li><li data-i18n="y4"></li><li data-i18n="y5"></li><li data-i18n="y6"></li><li data-i18n="y7"></li></ul>
+          <p class="info-nope" data-i18n="infoNo"></p>
         </div></div>
       </div>
 
@@ -431,7 +430,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       h2: 'Four plans, <em>one monthly</em> rhythm',
       drag: 'Drag the cards to explore each plan. Hover or tap + to see the investment.',
       glisser: 'Drag',
-      infoBtn: 'What’s included', infoFocusK: 'What the plans are for', infoFocus: 'Productions designed for companies. Each plan has an investment and a proposal built to raise the way your business is seen: a professional image, told through dynamic videos for social networks, with cinematic quality.', infoNoK: 'Not included', no1: '3D animation', no2: 'Events and coverage', no3: 'Music videos', no4: 'Fashion films and large productions',
+      infoBtn: 'What’s included', infoIntro: 'Designed for companies that want to be seen on another level. Dynamic videos for social networks, with a cinematic language and finish, giving your brand a professional and memorable image.', y1: 'Creative direction', y2: 'Shooting day', y3: 'Editing and montage', y4: 'Color grading', y5: '3 free revisions', y6: 'Subtitled version available', y7: 'High-quality video delivery', infoNo: 'Not included: animations (3D and motion graphics), events and coverage, more elaborate productions (music videos, fashion films, commercials).',
       custK: 'Custom plan', custH: 'Need a plan that fits your project?', custP: 'Tell me what you need and we’ll adapt a plan to your demand.', custBtn: 'Get in touch by', custWa: 'Hello André, I would like a custom plan adapted to my project. Can we talk about it?', custSubj: 'Custom plan request',
       planLabel: 'Monthly plan', reelsMo: 'Reels / month',
       invest: 'Investment', per: '/ month',
@@ -452,7 +451,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       h2: 'Quatre forfaits, <em>un rythme</em> mensuel',
       drag: 'Faites glisser les cartes pour découvrir chaque forfait. Survolez ou touchez le + pour voir l\'investissement.',
       glisser: 'Glisser',
-      infoBtn: 'Ce qui est inclus', infoFocusK: 'À quoi servent les forfaits', infoFocus: 'Des productions pensées pour les entreprises. Chaque forfait a un investissement et une proposition conçus pour élever la façon dont votre entreprise est perçue : une image professionnelle, portée par des vidéos dynamiques pour les réseaux sociaux, avec une qualité cinématographique.', infoNoK: 'Non inclus', no1: 'Animation 3D', no2: 'Événements et captations', no3: 'Clips musicaux', no4: 'Films de mode et grosses productions',
+      infoBtn: 'Ce qui est inclus', infoIntro: 'Pensés pour les entreprises qui veulent être vues à un autre niveau. Des vidéos dynamiques pour les réseaux sociaux, avec un langage et une finition cinématographiques, qui donnent à votre marque une image professionnelle et mémorable.', y1: 'Direction créative', y2: 'Journée de tournage', y3: 'Montage', y4: 'Étalonnage', y5: '3 modifications offertes', y6: 'Version sous-titrée en option', y7: 'Livraison des vidéos en haute qualité', infoNo: 'Non inclus : animations (3D et motion graphics), événements et captations, productions plus élaborées (clips musicaux, films de mode, publicités).',
       custK: 'Sur mesure', custH: 'Besoin d’un forfait adapté à vos besoins ?', custP: 'Parlez-moi de votre projet et nous construirons ensemble un forfait qui vous correspond.', custBtn: 'Contactez-moi par', custWa: 'Bonjour André, je voudrais un forfait sur mesure adapté à mon projet. Pouvons-nous en parler ?', custSubj: 'Demande de forfait sur mesure',
       planLabel: 'Forfait mensuel', reelsMo: 'Reels / mois',
       invest: 'Investissement', per: '/ mois',
@@ -473,7 +472,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       h2: 'Quatro pacotes, <em>um ritmo</em> mensal',
       drag: 'Arraste os cartões para conhecer cada pacote. Passe o mouse ou toque no + para ver o investimento.',
       glisser: 'Arraste',
-      infoBtn: 'O que está incluído', infoFocusK: 'Para que servem os pacotes', infoFocus: 'Produções pensadas para empresas. Cada pacote tem um investimento e uma proposta pensados para elevar o nível com que o seu negócio é visto: uma imagem profissional, contada em vídeos dinâmicos para redes sociais, com qualidade cinematográfica.', infoNoK: 'Não incluído', no1: 'Animação 3D', no2: 'Eventos e coberturas', no3: 'Clipes musicais', no4: 'Fashion films e grandes produções',
+      infoBtn: 'O que está incluído', infoIntro: 'Pensados para empresas que querem ser vistas num outro nível. Vídeos dinâmicos para redes sociais, com linguagem e acabamento cinematográficos, que dão à sua marca uma imagem profissional e memorável.', y1: 'Direção criativa', y2: 'Diária de gravação', y3: 'Edição e montagem', y4: 'Colorimetria', y5: '3 alterações gratuitas', y6: 'Opção de vídeo legendado', y7: 'Entrega dos vídeos em alta qualidade', infoNo: 'Não incluído: animações (3D e motion graphics), eventos e coberturas, produções mais elaboradas (clipes musicais, fashion films, comerciais).',
       custK: 'Pacote personalizado', custH: 'Precisa adaptar o pacote à sua demanda?', custP: 'Me conte sobre o seu projeto e montamos um pacote sob medida.', custBtn: 'Entre em contato por', custWa: 'Olá André, gostaria de um pacote personalizado para o meu projeto. Podemos conversar?', custSubj: 'Pedido de pacote personalizado',
       planLabel: 'Pacote mensal', reelsMo: 'Reels / mês',
       invest: 'Investimento', per: '/ mês',
