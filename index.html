@@ -47,6 +47,9 @@ img { max-width: 100%; }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+img { -webkit-user-drag: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.frame img, .endframe img, .pc-bg { pointer-events: none; -webkit-touch-callout: none; }
+.frame, .endframe, .pcard { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .wrap { max-width: 1360px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
 /* header, same as danzfilm.com */
@@ -530,7 +533,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       '<li><b>' + p.days + '</b><span data-i18n="' + (p.days > 1 ? 'dayN' : 'day1') + '"></span></li></ul>' +
       '<div class="pr-btns"><a class="pr-btn wa" target="_blank" rel="noopener"><span class="go-t"></span>' + WA_ICON + '</a>' +
       '<a class="pr-btn mail">' + '<span class="mail-t"></span>' + ML_ICON + '</a></div></div>' +
-      '<a class="pc-logo" href="https://danzfilm.com" target="_blank" rel="noopener" aria-label="danzfilm.com"><i></i></a>' +
+      '<a class="pc-logo" href="https://danzfilm.com/#reels" target="_blank" rel="noopener" aria-label="danzfilm.com"><i></i></a>' +
       '<button class="pc-plus" type="button" aria-expanded="false" data-aria="plus">' + PLUS_ICON + '</button>';
     stack.appendChild(c);
     cards.push(c);
@@ -690,6 +693,10 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
   /* timecode 24 fps */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* no drag-and-drop or "lift" of photos on long press (iOS/desktop) */
+  document.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });
+  document.addEventListener('contextmenu', function (e) { if (e.target && e.target.closest && e.target.closest('.frame, .endframe, .pcard')) e.preventDefault(); });
+  document.querySelectorAll('img').forEach(function (im) { im.setAttribute('draggable', 'false'); });
   /* scroll focus: when the packages come into view the heading shrinks and the cards grow */
   (function () {
     if (reduce) return;
@@ -734,7 +741,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     list.push(list[0]);
     var reel = document.createElement('div');
     reel.className = 'reel';
-    reel.innerHTML = list.map(function (f) { return '<div class="rf" style="height:' + H + 'px;margin-bottom:' + GAP + 'px"><img src="' + f.src + '" alt="" style="transform:scale(' + f.z + ')"></div>'; }).join('');
+    reel.innerHTML = list.map(function (f) { return '<div class="rf" style="height:' + H + 'px;margin-bottom:' + GAP + 'px"><img draggable="false" src="' + f.src + '" alt="" style="transform:scale(' + f.z + ')"></div>'; }).join('');
     pic.appendChild(reel);
     box.classList.add('rolling');
     state = { box: box, pic: pic, reel: reel, H: H, n: n, pos: 0, v: 0, hold: true, target: 0, last: performance.now() };
