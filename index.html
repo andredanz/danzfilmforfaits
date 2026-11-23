@@ -108,8 +108,8 @@ html.clapping, html.clapping * { cursor: none !important; }
 
 /* letters of the big titles change colour under the pointer, like danzfilm.com */
 h1 .ch, h2 .ch { transition: color .12s; }
-h1 .ch:hover, h2 .ch:hover { color: #472F22; }
-h1 > .ch:hover, h2 em .ch:hover { color: #472F22; }
+h1 .ch:hover, h2 .ch:hover { color: var(--accent); }
+h1 > .ch:hover, h2 em .ch:hover { color: var(--fg); }
 
 /* plans */
 .plans { overflow-x: clip; border-top: 1px solid var(--line); padding-block: clamp(56px, 9vw, 110px) clamp(40px, 7vw, 80px); scroll-margin-top: 72px; }
@@ -248,8 +248,6 @@ footer img { height: 30px; width: auto; display: block; }
   .stack { height: calc(var(--cw) * 1.15); }
   .pr-btn { padding: 11px 9px; letter-spacing: 0.03em; font-size: 10px; gap: 6px; }
   .pr-btns { gap: 6px; }
-  .pr-btn.mail span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  .pr-btn.mail { padding: 11px 14px; }
   .pr-btn svg { width: 16px; height: 16px; }
   .bar .wrap { gap: 12px; }
   .lang button { width: 34px; }
@@ -258,7 +256,8 @@ footer img { height: 30px; width: auto; display: block; }
   .pr-list li { padding: 6px 0; font-size: 13px; }
   .pr-list b { font-size: 1.5rem; }
   .pr-btn { padding: 11px 12px; font-size: 11px; letter-spacing: 0.08em; gap: 8px; }
-  .pr-btns { flex-wrap: nowrap; }
+  .pr-btns { flex-wrap: wrap; flex-direction: column; }
+  .pr-btn { justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -365,7 +364,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       invest: 'Investment', per: '/ month',
       reels: 'Reels productions per month',
       day1: 'day of video shooting', dayN: 'days of video shooting',
-      chooseX: 'Choose {n}', mail: 'E-mail', subj: 'Quote request – {n}',
+      chooseX: 'Choose {n}', by: 'by', mail: 'E-mail', subj: 'Quote request – {n}',
       wamsg: 'Hello André, I am interested in the {n} plan (€{p}/month). Can we talk about it?',
       prev: 'Previous plan', next: 'Next plan', plus: 'Investment and details',
       endH: 'Cinematic films, from the first idea to the <em>final cut</em>', endBtn: 'Portfolio',
@@ -384,7 +383,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       invest: 'Investissement', per: '/ mois',
       reels: 'Productions de Reels par mois',
       day1: 'journée de tournage vidéo', dayN: 'jours de tournage vidéo',
-      chooseX: 'Choisir {n}', mail: 'E-mail', subj: 'Demande de devis – {n}',
+      chooseX: 'Choisir {n}', by: 'par', mail: 'E-mail', subj: 'Demande de devis – {n}',
       wamsg: 'Bonjour André, je suis intéressé(e) par le forfait {n} ({p} €/mois). Pouvons-nous en parler ?',
       prev: 'Forfait précédent', next: 'Forfait suivant', plus: 'Investissement et détails',
       endH: 'Des films cinématographiques, de la première idée au <em>montage final</em>', endBtn: 'Portfolio',
@@ -403,7 +402,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       invest: 'Investimento', per: '/ mês',
       reels: 'Produções de Reels por mês',
       day1: 'diária de gravação em vídeo', dayN: 'diárias de gravação em vídeo',
-      chooseX: 'Escolher {n}', mail: 'E-mail', subj: 'Pedido de orçamento – {n}',
+      chooseX: 'Escolher {n}', by: 'por', mail: 'E-mail', subj: 'Pedido de orçamento – {n}',
       wamsg: 'Olá André, tenho interesse no pacote {n} (€{p}/mês). Podemos conversar?',
       prev: 'Pacote anterior', next: 'Próximo pacote', plus: 'Investimento e detalhes',
       endH: 'Filmes com linguagem de cinema, da primeira ideia à <em>edição final</em>', endBtn: 'Portfólio',
@@ -453,8 +452,8 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       '<p class="pr-price"><span class="amt">' + fmt(p.price) + '</span><span class="cur">€</span><span class="per" data-i18n="per"></span></p>' +
       '<ul class="pr-list"><li><b>' + p.reels + '</b><span data-i18n="reels"></span></li>' +
       '<li><b>' + p.days + '</b><span data-i18n="' + (p.days > 1 ? 'dayN' : 'day1') + '"></span></li></ul>' +
-      '<div class="pr-btns"><a class="pr-btn wa" target="_blank" rel="noopener">' + WA_ICON + '<span class="go-t"></span></a>' +
-      '<a class="pr-btn mail">' + ML_ICON + '<span data-i18n="mail"></span></a></div></div>' +
+      '<div class="pr-btns"><a class="pr-btn wa" target="_blank" rel="noopener"><span class="go-t"></span>' + WA_ICON + '</a>' +
+      '<a class="pr-btn mail">' + '<span class="mail-t"></span>' + ML_ICON + '</a></div></div>' +
       '<button class="pc-plus" type="button" aria-expanded="false" data-aria="plus">' + PLUS_ICON + '</button>';
     stack.appendChild(c);
     cards.push(c);
@@ -523,7 +522,10 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     plans.forEach(function (p, i) {
       goLinks[i].href = 'https://wa.me/330769692517?text=' + encodeURIComponent(t('wamsg').replace('{n}', p.name).replace('{p}', fmt(p.price)));
       mailLinks[i].href = 'mailto:danzfilm@gmail.com?subject=' + encodeURIComponent(t('subj').replace('{n}', p.name)) + '&body=' + encodeURIComponent(t('wamsg').replace('{n}', p.name).replace('{p}', fmt(p.price)));
-      goLinks[i].querySelector('.go-t').textContent = t('chooseX').replace('{n}', p.name);
+      goLinks[i].querySelector('.go-t').textContent = t('chooseX').replace('{n}', p.name) + ' ' + t('by');
+      mailLinks[i].querySelector('.mail-t').textContent = t('chooseX').replace('{n}', p.name) + ' ' + t('by');
+      goLinks[i].setAttribute('aria-label', t('chooseX').replace('{n}', p.name) + ' ' + t('by') + ' WhatsApp');
+      mailLinks[i].setAttribute('aria-label', t('chooseX').replace('{n}', p.name) + ' ' + t('by') + ' e-mail');
       dots[i].setAttribute('aria-label', p.name);
     });
     document.querySelectorAll('#lang [data-lang]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'); });
