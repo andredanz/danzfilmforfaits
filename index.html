@@ -186,7 +186,7 @@ h2 em { font-style: normal; color: var(--accent); }
 .pc-num span { display: block; margin: 0 0 10px; max-width: 9ch; font: 700 13px/1.2 var(--body); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(252, 236, 207, 0.78); }
 
 /* the plus button and the yellow panel that comes down with price and details */
-.pc-plus { position: absolute; z-index: 3; top: 16px; right: 16px; width: 58px; height: 58px; border-radius: 50%; border: 0; background: var(--accent); color: #0b0907; display: grid; place-items: center; cursor: pointer; transition: transform .3s cubic-bezier(.2,.8,.2,1), background .2s; }
+.pc-plus { position: absolute; z-index: 5; top: 16px; right: 16px; width: 58px; height: 58px; border-radius: 50%; border: 0; background: var(--accent); color: #0b0907; display: grid; place-items: center; cursor: pointer; transition: transform .3s cubic-bezier(.2,.8,.2,1), background .2s; }
 .pc-plus svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
 .pc-plus:hover { transform: scale(1.1); }
 .pc-plus.nudge { animation: plusBlink 1s ease-in-out 1; }
@@ -538,15 +538,15 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     goLinks.push(c.querySelector('.pr-btn.wa'));
     mailLinks.push(c.querySelector('.pr-btn.mail'));
     var plus = c.querySelector('.pc-plus'), ibtn = c.querySelector('.pc-info-btn');
+    /* the ! works like the +: hover on a mouse, tap to keep it open on a phone */
+    ibtn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && i === cur) setInfo(i, true); });
     ibtn.addEventListener('click', function () {
-      var on = !c.classList.contains('info-open');
-      if (on) setOpen(i, false);
-      c.classList.toggle('info-open', on);
-      ibtn.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if (c.classList.contains('info-open') && infoPinned[i]) setInfo(i, false);
+      else { setInfo(i, true); infoPinned[i] = true; }
     });
     /* mouse: the panel comes down when the pointer touches the +, and goes back up when it leaves the card */
-    plus.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && i === cur && !c.classList.contains('info-open')) setOpen(i, true); });
-    c.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !pinned[i]) setOpen(i, false); });
+    plus.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && i === cur) setOpen(i, true); });
+    c.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { if (!pinned[i]) setOpen(i, false); if (!infoPinned[i]) setInfo(i, false); } });
     /* click or tap: keeps it open (or closes it) */
     plus.addEventListener('click', function () {
       var isOpen = c.classList.contains('open');
@@ -572,8 +572,17 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     }
     requestAnimationFrame(step);
   }
+  var infoPinned = [];
+  function setInfo(i, on) {
+    var c = cards[i];
+    if (on) { setOpen(i, false); }
+    else infoPinned[i] = false;
+    c.classList.toggle('info-open', on);
+    c.querySelector('.pc-info-btn').setAttribute('aria-expanded', on ? 'true' : 'false');
+  }
   function setOpen(i, open) {
     var c = cards[i];
+    if (open && c.classList.contains('info-open')) { c.classList.remove('info-open'); infoPinned[i] = false; c.querySelector('.pc-info-btn').setAttribute('aria-expanded', 'false'); }
     var was = c.classList.contains('open');
     c.classList.toggle('open', open);
     pluses[i].setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -637,7 +646,7 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
       mailLinks[i].tabIndex = k === 0 ? 0 : -1;
       c.querySelector('.pc-logo').tabIndex = k === 0 ? 0 : -1;
       c.querySelector('.pc-info-btn').tabIndex = k === 0 ? 0 : -1;
-      if (k !== 0) { setOpen(i, false); c.classList.remove('info-open'); c.querySelector('.pc-info-btn').setAttribute('aria-expanded', 'false'); }
+      if (k !== 0) { setOpen(i, false); setInfo(i, false); }
     });
     dots.forEach(function (d, i) { d.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
   }
