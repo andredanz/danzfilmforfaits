@@ -106,14 +106,20 @@ h1 > span:not(.ch) { display: block; color: var(--fg); }
 .frame::after { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; }
 .frame i::before { bottom: 14px; left: 14px; border-bottom-width: 1px; border-left-width: 1px; }
 .frame i::after { bottom: 14px; right: 14px; border-bottom-width: 1px; border-right-width: 1px; }
-.vframe { justify-self: center; width: min(100%, 360px); aspect-ratio: 9 / 16; max-height: 640px; background: #000; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.vslot { justify-self: center; width: min(100%, 360px); aspect-ratio: 9 / 16; max-height: 640px; position: relative; }
+.vframe { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; background: #000; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.vframe.big { position: fixed; z-index: 400; top: 50%; left: 50%; transform: translate(-50%, -50%); height: min(94vh, 1100px); width: min(94vw, calc(min(94vh, 1100px) * 9 / 16)); box-shadow: 0 30px 120px rgba(0,0,0,.8); }
+.vback { position: fixed; inset: 0; z-index: 399; background: rgba(8,5,3,.88); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.vback.show { opacity: 1; pointer-events: auto; }
 .vframe { border: 2px solid var(--accent); border-radius: 14px; }
 .vframe::before, .vframe::after, .vframe i::before, .vframe i::after { display: none; }
-.vsnd { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; border: 0; background: transparent; color: var(--fg); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.vsnd svg { position: absolute; right: 12px; bottom: 12px; padding: 9px; box-sizing: content-box; border-radius: 50%; background: rgba(22,16,12,.6); }
-.vsnd .on { display: none; }
-.vsnd[aria-pressed="true"] .on { display: inline; }
-.vsnd[aria-pressed="true"] .off { display: none; }
+.vshield { position: absolute; inset: 0; z-index: 2; }
+.vctl { position: absolute; right: 12px; bottom: 12px; z-index: 4; display: flex; gap: 8px; }
+.vb { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(22,16,12,.62); color: var(--fg); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .2s, color .2s; }
+.vb:hover { background: var(--accent); color: #16100c; }
+.vb .on { display: none; }
+.vb[aria-pressed="true"] .on { display: inline; }
+.vb[aria-pressed="true"] .off { display: none; }
 .vframe iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .vframe::before, .vframe::after { z-index: 2; }
 .frame.roll { cursor: grab; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: pan-y; }
@@ -366,10 +372,16 @@ footer img { height: 30px; width: auto; display: block; }
           <a class="btn" href="https://danzfilm.com" target="_blank" rel="noopener"><span>danzfilm.com</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
         </div>
       </div>
-      <figure class="frame vframe">
+      <div class="vslot"><figure class="frame vframe" id="vfig">
         <iframe id="vidfr" src="https://www.youtube.com/embed/DSTn5q0BBXA?autoplay=1&mute=1&loop=1&playlist=DSTn5q0BBXA&controls=0&playsinline=1&rel=0&modestbranding=1&enablejsapi=1" title="Andre Danz - Forfaits Mensuels" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <button class="vsnd" id="vsnd" type="button" aria-label="Sound" aria-pressed="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z"/><g class="on"><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></g><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
-      </figure>
+        <div class="vshield"></div>
+        <div class="vctl">
+          <button class="vb" id="vbig" type="button" aria-label="Enlarge" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><g class="off"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g><g class="on"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g></svg></button>
+          <button class="vb" id="vrst" type="button" aria-label="Restart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/></svg></button>
+          <button class="vb" id="vsnd" type="button" aria-label="Sound" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z"/><g class="on"><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></g><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+        </div>
+      </figure></div>
+      <div class="vback" id="vback"></div>
     </div>
   </div>
 
@@ -858,10 +870,18 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
   setTimeout(blink, 1500);
 })();
   (function () {
-    var fr = document.getElementById('vidfr'), b = document.getElementById('vsnd'), on = false;
-    if (!fr || !b) return;
-    function cmd(f) { try { fr.contentWindow.postMessage(JSON.stringify({ event: 'command', func: f, args: [] }), '*'); } catch (e) {} }
-    b.addEventListener('click', function () { on = !on; cmd(on ? 'unMute' : 'mute'); cmd('playVideo'); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    var fr = document.getElementById('vidfr'), b = document.getElementById('vsnd'), r = document.getElementById('vrst'), on = false;
+    if (!fr || !b || !r) return;
+    function cmd(f, a) { try { fr.contentWindow.postMessage(JSON.stringify({ event: 'command', func: f, args: a || [] }), '*'); } catch (e) {} }
+    function snd(v) { on = v; cmd(v ? 'unMute' : 'mute'); b.setAttribute('aria-pressed', v ? 'true' : 'false'); }
+    b.addEventListener('click', function () { snd(!on); cmd('playVideo'); });
+    r.addEventListener('click', function () { cmd('seekTo', [0, true]); cmd('playVideo'); });
+    var fg = document.getElementById('vfig'), bg = document.getElementById('vback'), bb = document.getElementById('vbig');
+    function big(v) { fg.classList.toggle('big', v); bg.classList.toggle('show', v); bb.setAttribute('aria-pressed', v ? 'true' : 'false'); }
+    bb.addEventListener('click', function () { big(!fg.classList.contains('big')); });
+    bg.addEventListener('click', function () { big(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') big(false); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!es[0].isIntersecting && on) snd(false); }, { threshold: 0.25 }).observe(fr);
   })();
 </script>
 </body>
