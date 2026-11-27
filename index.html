@@ -120,7 +120,7 @@ h1 > span:not(.ch) { display: block; color: var(--fg); }
 .vb .on { display: none; }
 .vb[aria-pressed="true"] .on { display: inline; }
 .vb[aria-pressed="true"] .off { display: none; }
-.vframe iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vframe iframe { pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .vframe::before, .vframe::after { z-index: 2; }
 .frame.roll { cursor: grab; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: pan-y; }
 .frame.roll.rolling { cursor: grabbing; }
@@ -373,9 +373,10 @@ footer img { height: 30px; width: auto; display: block; }
         </div>
       </div>
       <div class="vslot"><figure class="frame vframe" id="vfig">
-        <iframe id="vidfr" src="https://www.youtube.com/embed/DSTn5q0BBXA?autoplay=1&mute=1&loop=1&playlist=DSTn5q0BBXA&controls=0&playsinline=1&rel=0&modestbranding=1&enablejsapi=1" title="Andre Danz - Forfaits Mensuels" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe id="vidfr" src="https://www.youtube.com/embed/DSTn5q0BBXA?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1" title="Andre Danz - Forfaits Mensuels" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <div class="vshield"></div>
         <div class="vctl">
+          <button class="vb" id="vpp" type="button" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><g class="on"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g><path class="off" d="M8 5v14l11-7z"/></svg></button>
           <button class="vb" id="vbig" type="button" aria-label="Enlarge" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><g class="off"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g><g class="on"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g></svg></button>
           <button class="vb" id="vrst" type="button" aria-label="Restart"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/></svg></button>
           <button class="vb" id="vsnd" type="button" aria-label="Sound" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z"/><g class="on"><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></g><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
@@ -876,6 +877,19 @@ window.CARD_PHOTOS = [window.ROLL_PHOTOS[0], ["data:image/jpeg;base64,/9j/4AAQSk
     function snd(v) { on = v; cmd(v ? 'unMute' : 'mute'); b.setAttribute('aria-pressed', v ? 'true' : 'false'); }
     b.addEventListener('click', function () { snd(!on); cmd('playVideo'); });
     r.addEventListener('click', function () { cmd('seekTo', [0, true]); cmd('playVideo'); });
+    var pp = document.getElementById('vpp'), playing = true;
+    function setPP(v) { playing = v; pp.setAttribute('aria-pressed', v ? 'true' : 'false'); }
+    pp.addEventListener('click', function () { cmd(playing ? 'pauseVideo' : 'playVideo'); setPP(!playing); });
+    function listen() { try { fr.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch (e) {} }
+    fr.addEventListener('load', function () { listen(); setTimeout(listen, 800); });
+    window.addEventListener('message', function (e) {
+      if (e.source !== fr.contentWindow) return;
+      var d = e.data; try { if (typeof d === 'string') d = JSON.parse(d); } catch (x) { return; }
+      var st = d && (d.event === 'onStateChange' ? d.info : (d.info && d.info.playerState));
+      if (st === 0) { cmd('seekTo', [0, true]); cmd('playVideo'); setPP(true); }
+      else if (st === 1) setPP(true);
+      else if (st === 2) setPP(false);
+    });
     var fg = document.getElementById('vfig'), bg = document.getElementById('vback'), bb = document.getElementById('vbig');
     function big(v) { fg.classList.toggle('big', v); bg.classList.toggle('show', v); bb.setAttribute('aria-pressed', v ? 'true' : 'false'); }
     bb.addEventListener('click', function () { big(!fg.classList.contains('big')); });
